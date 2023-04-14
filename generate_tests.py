@@ -57,5 +57,7 @@ def main():
     test_code = send_to_chatgpt(file_content)
     test_file_path = save_tests_to_file(test_code)
 
+    print(f"Tests created: {test_file_path}")
+
 if __name__ == "__main__":
     main()
