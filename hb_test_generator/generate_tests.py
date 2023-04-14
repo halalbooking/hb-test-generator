@@ -60,7 +60,7 @@ def save_tests_to_file(test_code, test_file_path):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: hb_generate_tests <file_path>")
+        print("Usage: hb-generate-tests <file_path>")
         sys.exit(1)
 
     file_path = sys.argv[1]

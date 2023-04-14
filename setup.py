@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="hb-test-generator",
-    version="0.1.8",
+    version="0.1.9",
     description="A package to generate tests & write it into files using OpenAI's GPT-3",
     author="Maksymenkov Eugene",
     author_email="foatei@gmail.com",
@@ -14,6 +14,9 @@ setup(
     entry_points={
         "console_scripts": [
             "hb-generate-tests=hb_test_generator.generate_tests:main",
+            "hb-generate-test=hb_test_generator.generate_tests:main",
+            "hb-gen-tests=hb_test_generator.generate_tests:main",
+            "hb-gen-test=hb_test_generator.generate_tests:main",
         ],
     },
     classifiers=[

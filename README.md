@@ -20,6 +20,12 @@ As it's an AI, it's not perfect. It's a good start, but you should always review
 - `hb-generate-tests app/helpers/membership_helper.rb` will create a `spec/helpers/membership_helper_spec.rb`.
 - `hb-generate-tests src/components/MyComponent.vue` will create a `tests/components/MyComponent.spec.js`. 
 
+### Command alternatives
+- `hb-generate-tests ...`
+- `hb-generate-test ...`
+- `hb-gen-tests ...`
+- `hb-gen-test ...`
+
 ### Prompt
 Create a `test_generator_prompt.txt` file containing the base prompt. Default prompt is:
 
