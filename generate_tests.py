@@ -8,9 +8,7 @@ def read_file(file_path):
     with open(file_path, "r") as file:
         return file.read()
 
-def send_to_chatgpt(file_content):
-    openai.api_key = os.environ["OPENAI_API_KEY"]
-
+def get_prompt_file():
     prompt_file_name = 'test_generator_prompt.txt'
     script_dir = Path(os.path.dirname(os.path.abspath(__file__)))
     default_prompt_file = script_dir / prompt_file_name
@@ -21,9 +19,12 @@ def send_to_chatgpt(file_content):
     else:
         prompt_file = default_prompt_file
 
-    base_prompt = read_file(prompt_file).strip()
+    return prompt_file
 
-    prompt = f"{base_prompt}\n{file_content}\n"
+def send_to_chatgpt(prompt, file_content):
+    openai.api_key = os.environ["OPENAI_API_KEY"]
+
+    prompt = f"{prompt}\n{file_content}\n"
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=prompt,
@@ -33,15 +34,19 @@ def send_to_chatgpt(file_content):
         temperature=0.5,
     )
 
-    print(response.choices[0].text.strip())
-
     return response.choices[0].text.strip()
 
-def save_tests_to_file(test_code):
-    tests_dir = Path("tests")
-    tests_dir.mkdir(exist_ok=True)
+def get_tests_file_info(file_path):
+    prompt_file = get_prompt_file()
+    base_prompt = read_file(prompt_file).strip()
+    prompt = f"Origin file path is {file_path}. What should be the path and filename of the tests file? Response shouldn't include any text except path and filename of the tests file. If below prompt has any information about tests file, like format/path/name/directory, take it into account: \n\n {base_prompt}."
+    print(f"Prompt:\n {prompt}\n---\n")
+    return send_to_chatgpt(prompt, "")
 
-    test_file_path = tests_dir / "generated_tests.js"
+def save_tests_to_file(test_code, test_file_path):
+    test_file_path = Path(test_file_path)
+    test_file_path.parent.mkdir(parents=True, exist_ok=True)
+
     with open(test_file_path, "w") as test_file:
         test_file.write(test_code)
 
@@ -54,8 +59,10 @@ def main():
 
     file_path = sys.argv[1]
     file_content = read_file(file_path)
-    test_code = send_to_chatgpt(file_content)
-    test_file_path = save_tests_to_file(test_code)
+
+    test_file_info = get_tests_file_info(file_path)
+    print(f"Tests will be saved into file: {test_file_info}")
+    test_file_path = save_tests_to_file(file_content, test_file_info)
 
     print(f"Tests created: {test_file_path}")
 
