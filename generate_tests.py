@@ -63,14 +63,15 @@ def save_tests_to_file(test_code, test_file_path):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python script.py <file_path>")
+        print("Usage: hb_generate_tests <file_path>")
         sys.exit(1)
 
     file_path = sys.argv[1]
-    file_content = read_file(file_path)
 
     test_file_info = get_tests_file_info(file_path)
     print(f"Tests will be saved into file: {test_file_info}")
+
+    file_content = read_file(file_path)
     test_file_path = save_tests_to_file(file_content, test_file_info)
 
     print(f"Tests created: {test_file_path}")
