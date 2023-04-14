@@ -1,4 +1,4 @@
-It writes tests and saves it into a test file.
+It writes tests and saves it into a file.
 
 ## Quality
 
