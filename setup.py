@@ -1,19 +1,19 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
-    name="hb_test_generator",
-    version="0.1.0",
+    name="hb-test-generator",
+    version="0.1.8",
     description="A package to generate tests & write it into files using OpenAI's GPT-3",
     author="Maksymenkov Eugene",
     author_email="foatei@gmail.com",
     url="https://github.com/halalbooking/hb_test_generator",
-    packages=find_packages(),
+    packages=['hb_test_generator'],
     install_requires=[
         "openai",
     ],
     entry_points={
         "console_scripts": [
-            "hb_generate_tests=hb_test_generator.generate_tests:main",
+            "hb-generate-tests=hb_test_generator.generate_tests:main",
         ],
     },
     classifiers=[

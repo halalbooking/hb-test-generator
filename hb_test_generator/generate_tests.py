@@ -45,11 +45,8 @@ def send_to_chatgpt(prompt, file_content):
 
     return response.choices[0].text.strip()
 
-def get_tests_file_info(file_path):
-    prompt_file = get_prompt_file()
-    base_prompt = read_file(prompt_file).strip()
+def get_tests_file_info(base_prompt, file_path):
     prompt = f"Origin file path is {file_path}. What should be the path and filename of the tests file? Response shouldn't include any text except path and filename of the tests file. If below prompt has any information about tests file, like format/path/name/directory, take it into account: \n\n {base_prompt}."
-    print(f"Prompt:\n {prompt}\n---\n")
     return send_to_chatgpt(prompt, "")
 
 def save_tests_to_file(test_code, test_file_path):
@@ -68,13 +65,17 @@ def main():
 
     file_path = sys.argv[1]
 
-    test_file_info = get_tests_file_info(file_path)
-    print(f"Tests will be saved into file: {test_file_info}")
+    prompt_file = get_prompt_file()
+    base_prompt = read_file(prompt_file).strip()
 
     file_content = read_file(file_path)
-    test_file_path = save_tests_to_file(file_content, test_file_info)
+    test_file_info = get_tests_file_info(base_prompt, file_path)
+    print(f"Tests will be saved into file: {test_file_info}")
 
-    print(f"Tests created: {test_file_path}")
+    test_code = send_to_chatgpt(base_prompt, file_content)
+    test_file_path = save_tests_to_file(test_code, test_file_info)
+
+    print("Done!")
 
 if __name__ == "__main__":
     main()
