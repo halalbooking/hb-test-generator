@@ -11,7 +11,10 @@ def read_file(file_path):
 def send_to_chatgpt(file_content):
     openai.api_key = os.environ["OPENAI_API_KEY"]
 
-    prompt = f"write tests for this code:\n{file_content}\n"
+    prompt_file = 'test_generator_prompt.txt'
+    base_prompt = read_file(prompt_file).strip()
+
+    prompt = f"{base_prompt}\n{file_content}\n"
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=prompt,
