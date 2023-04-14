@@ -21,8 +21,17 @@ def get_prompt_file():
 
     return prompt_file
 
+
+def get_openai_api_key():
+    api_key = os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        print("Please set the OPENAI_API_KEY environment variable.")
+        print("To obtain an API key, visit: https://platform.openai.com/account/api-keys")
+        sys.exit(1)
+    return api_key
+
 def send_to_chatgpt(prompt, file_content):
-    openai.api_key = os.environ["OPENAI_API_KEY"]
+    openai.api_key = get_openai_api_key()
 
     prompt = f"{prompt}\n{file_content}\n"
     response = openai.Completion.create(
