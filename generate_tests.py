@@ -11,7 +11,16 @@ def read_file(file_path):
 def send_to_chatgpt(file_content):
     openai.api_key = os.environ["OPENAI_API_KEY"]
 
-    prompt_file = 'test_generator_prompt.txt'
+    prompt_file_name = 'test_generator_prompt.txt'
+    script_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+    default_prompt_file = script_dir / prompt_file_name
+    local_prompt_file = Path.cwd() / prompt_file_name
+
+    if local_prompt_file.exists():
+        prompt_file = local_prompt_file
+    else:
+        prompt_file = default_prompt_file
+
     base_prompt = read_file(prompt_file).strip()
 
     prompt = f"{base_prompt}\n{file_content}\n"
@@ -24,17 +33,19 @@ def send_to_chatgpt(file_content):
         temperature=0.5,
     )
 
+    print(response.choices[0].text.strip())
+
     return response.choices[0].text.strip()
 
 def save_tests_to_file(test_code):
     tests_dir = Path("tests")
     tests_dir.mkdir(exist_ok=True)
 
-    test_file_path = tests_dir / "generated_tests.py"
+    test_file_path = tests_dir / "generated_tests.js"
     with open(test_file_path, "w") as test_file:
         test_file.write(test_code)
 
-    return test_file_path.relative_to(Path.cwd())
+    return os.path.relpath(test_file_path, Path.cwd())
 
 def main():
     if len(sys.argv) < 2:
@@ -45,8 +56,6 @@ def main():
     file_content = read_file(file_path)
     test_code = send_to_chatgpt(file_content)
     test_file_path = save_tests_to_file(test_code)
-
-    print(f"Tests created: {test_file_path}")
 
 if __name__ == "__main__":
     main()
